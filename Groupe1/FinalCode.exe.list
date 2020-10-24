@@ -1,0 +1,597 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+FinalCode.exe -- emu8086 assembler version: 4.08  
+ 
+[ 10/24/2020  --  6:17:21 PM ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[   2]        :                                       ;;Programme : Trie d'une liste saisie par l'utilisateur ;;
+[   3]        :                                       ;;Groupe    :1                                          ;;
+[   4]        :                                       ;;Membres   :Jean-Bernard ALTIDOR                       ;;
+[   5]        :                                       ;;           Kevin DUBUCHE                              ;;
+[   6]        :                                       ;;           Barbara THEODORE                           ;;
+[   7]        :                                       ;;                  Assembleur 8086 (Octobre 2020)      ;;
+[   8]        :                                       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+[   9]        :                                       
+[  10]        :                                       STACKSG SEGMENT PARA STACK 'STACK'
+[  11]    0000: 00 00 00 00 00 00 00 00 00 00 00 00   DW 64 DUP(?)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00             
+[  12]        :                                       STACKSG ENDS
+[  13]        :                                       
+[  14]        :                                       DATASG  SEGMENT PARA 'DATA'
+[  15]    0080: 00 00 00 00 00 00 00 00 00 00 00 00   DIZI    DB 100 dup(0)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00                         
+[  16]    00E4: 64                                    ELEMAN  DB 100
+[  17]    00E5: 45 6E 74 72 65 7A 20 6C 61 20 64 69   MSG2	DB	'Entrez la dimension de la liste: ','$'
+                6D 65 6E 73 69 6F 6E 20 64 65 20 6C 
+                61 20 6C 69 73 74 65 3A 20 24       
+[  18]    0107: 2D 24                                 MSG_neg	DB	'-','$'
+[  19]    0109: 2E 20 45 6C 65 6D 65 6E 74 3A 20 24   MSG_val	DB	'. Element: ','$'
+                                                    
+[  20]    0115: 20 2D 45 72 72 65 75 72 21 20 56 65   MSG_err DB	' -Erreur! Veuillez entrer un nombre entre 1 et 255', '$'
+                75 69 6C 6C 65 7A 20 65 6E 74 72 65 
+                72 20 75 6E 20 6E 6F 6D 62 72 65 20 
+                65 6E 74 72 65 20 31 20 65 74 20 32 
+                35 35 24                            
+[  21]    0148: 20 2D 45 72 72 65 75 72 21 20 56 65   MSG_err1 DB	' -Erreur! Veuillez entrer un nombre entre 1 et 20', '$'
+                75 69 6C 6C 65 7A 20 65 6E 74 72 65 
+                72 20 75 6E 20 6E 6F 6D 62 72 65 20 
+                65 6E 74 72 65 20 31 20 65 74 20 32 
+                30 24                               
+[  22]    017A: 2D 2D 20 4C 69 73 74 65 20 6F 72 69   MSG4 	DB	'-- Liste originale: --', '$'
+                67 69 6E 61 6C 65 3A 20 2D 2D 24    
+[  23]    0191: 2D 2D 20 4C 69 73 74 65 20 74 72 69   MSG5 	DB	'-- Liste trie: --', '$'
+                65 3A 20 2D 2D 24                   
+[  24]    01A3: 2D 2D 20 4C 69 73 74 65 20 6E 6F 6D   MSG6 	DB	'-- Liste nombres pairs (ordre croissant): --', '$'
+                62 72 65 73 20 70 61 69 72 73 20 28 
+                6F 72 64 72 65 20 63 72 6F 69 73 73 
+                61 6E 74 29 3A 20 2D 2D 24          
+[  25]    01D0: 2D 2D 20 4C 69 73 74 65 20 6E 6F 6D   MSG7 	DB	'-- Liste nombres impairs multiples de 3 (ordre decroissant): --', '$'
+                62 72 65 73 20 69 6D 70 61 69 72 73 
+                20 6D 75 6C 74 69 70 6C 65 73 20 64 
+                65 20 33 20 28 6F 72 64 72 65 20 64 
+                65 63 72 6F 69 73 73 61 6E 74 29 3A 
+                20 2D 2D 24                         
+[  26]    0210: 2D 2D 20 4C 69 73 74 65 20 6E 6F 6D   MSG8	DB	'-- Liste nombres des autres nombres (ordre croissant): --', '$'
+                62 72 65 73 20 64 65 73 20 61 75 74 
+                72 65 73 20 6E 6F 6D 62 72 65 73 20 
+                28 6F 72 64 72 65 20 63 72 6F 69 73 
+                73 61 6E 74 29 3A 20 2D 2D 24       
+[  27]    024A: 20 20 20 20 20 20 20 20 20 20 20 2D   MSG9	DB	'           -- Trie d une liste saisie par l utilisateur. --', '$'
+                2D 20 54 72 69 65 20 64 20 75 6E 65 
+                20 6C 69 73 74 65 20 73 61 69 73 69 
+                65 20 70 61 72 20 6C 20 75 74 69 6C 
+                69 73 61 74 65 75 72 2E 20 2D 2D 24 
+                                                    
+[  28]    0286: 20 20 20 20 20 20 20 20 20 20 20 2D   MSG10	DB	'           -- Merci d avoir utiliser notre programme! --', '$'
+                2D 20 4D 65 72 63 69 20 64 20 61 76 
+                6F 69 72 20 75 74 69 6C 69 73 65 72 
+                20 6E 6F 74 72 65 20 70 72 6F 67 72 
+                61 6D 6D 65 21 20 2D 2D 24          
+[  29]        :                                       
+[  30]        :                                       
+[  31]    02BF: 20 20 24                              MSG_voi	DB	'  ','$'
+[  32]    02C2: 1A                                    the_string db 26
+[  33]    02C3: 00                                    db ?
+[  34]    02C4: 00 00 00 00 00 00 00 00 00 00 00 00   db 26 dup (?)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00                               
+[  35]    02DE: 00 00                                 size DW 0;      Dimension du tableau
+[  36]        :                                       DATASG ENDS
+[  37]        :                                       
+[  38]        :                                       CODESG  SEGMENT PARA 'CODE'
+[  39]        :                                       ASSUME CS:CODESG, DS:DATASG, SS:STACKSG
+[  40]        :                                       
+[  41]    02E0:                                       BASLA   PROC FAR
+[  42]    02E0: 1E                                    PUSH DS
+[  43]    02E1: 33 C0                                 XOR AX,AX
+[  44]    02E3: 50                                    PUSH AX
+[  45]    02E4: B8 08 00                              MOV AX, DATASG
+[  46]    02E7: 8E D8                                 MOV DS, AX
+[  47]        :                                       		;----------;
+[  48]        :                                       
+[  49]    02E9: BA CA 01                              		LEA DX,MSG9
+[  50]    02EC: B4 09                                 		MOV AH,9
+[  51]    02EE: CD 21                                 		INT 21H
+[  52]    02F0: E8 DA 01                              CALL new_line
+[  53]        :                                       
+[  54]        :                                       ;Demande de la dimension du tableau
+[  55]    02F3:                                       		ask_again:
+[  56]    02F3: BA 65 00                              LEA DX,MSG2	
+[  57]    02F6: B4 09                                 		MOV AH,9
+[  58]    02F8: CD 21                                 		INT 21H
+[  59]        :                                       		
+[  60]    02FA: E8 C0 01                              		CALL read_number ; Recoit la dimension de la liste
+[  61]    02FD: 83 FB 15                              		CMP BX,21
+[  62]    0300: 7D 07                                 		JGE	hata0    ;  Borne superieur 20
+[  63]    0302: 83 FB 01                              		CMP BX,1
+[  64]    0305: 7C 02                                 		JL hata0	; Borne inferieur 1
+[  65]        :                                       		
+[  66]        :                                       		
+[  67]    0307: EB 0C                                 JMP ok:
+[  68]        :                                       
+[  69]    0309:                                       		hata0:
+[  70]    0309: BA C8 00                              LEA DX,MSG_err1 ;Message d'erreur
+[  71]    030C: B4 09                                 		MOV AH,9
+[  72]    030E: CD 21                                 		INT 21H		
+[  73]    0310: E8 BA 01                              		CALL new_line
+[  74]    0313: EB DE                                 		JMP ask_again
+[  75]        :                                       
+[  76]    0315:                                       ok:
+[  77]    0315: E8 B5 01                              		CALL new_line ;saut de ligne
+[  78]    0318: 53                                    PUSH BX
+[  79]        :                                       		
+[  80]    0319: 33 C9                                 		XOR CX,CX
+[  81]    031B: 8A CB                                 		MOV CL,BL
+[  82]        :                                       		
+[  83]    031D: 33 F6                                 		XOR SI,SI
+[  84]        :                                       
+[  85]        :                                       ;Reception et analyse de des entrees de l'utilisateur
+[  86]    031F:                                       getElement:
+[  87]    031F: 8B DE                                 		MOV BX,SI
+[  88]    0321: FE C3                                 		INC BL
+[  89]    0323: E8 B8 01                              		CALL print	;
+[  90]        :                                       
+[  91]    0326: BA 89 00                              		LEA DX,MSG_val	
+[  92]    0329: B4 09                                 		MOV AH,9
+[  93]        :                                       		
+[  94]    032B: CD 21                                 		INT 21H
+[  95]        :                                       
+[  96]    032D: E8 8D 01                              		CALL read_number ; recoit l'input
+[  97]        :                                       		
+[  98]    0330: 81 FB 00 01                           		CMP BX,256
+[  99]    0334: 7D 07                                 		JGE	hata1    ; Borne superieur 255
+[ 100]    0336: 83 FB 01                              		CMP BX,1
+[ 101]    0339: 7C 02                                 		JL hata1	; Borne inferieur 1
+[ 102]        :                                       
+[ 103]    033B: EB 0B                                 		JMP hatayok
+[ 104]    033D:                                       		hata1:
+[ 105]    033D: BA 95 00                              			LEA DX,MSG_err
+[ 106]    0340: B4 09                                 			MOV AH,9
+[ 107]    0342: CD 21                                 			INT 21H
+[ 108]    0344: 4E                                    			DEC SI
+[ 109]    0345: 41                                    			INC CX
+[ 110]    0346: EB 02                                 			JMP hataDevam
+[ 111]    0348:                                       		hatayok:
+[ 112]        :                                       		
+[ 113]    0348: 88 1C                                 		MOV dizi[SI],BL
+[ 114]    034A:                                       		hataDevam:
+[ 115]    034A: E8 80 01                              		CALL new_line
+[ 116]    034D: 46                                    		INC SI
+[ 117]    034E: E2 CF                                 		LOOP getElement
+[ 118]        :                                       		
+[ 119]    0350: E8 7A 01                              		CALL new_line	
+[ 120]    0353: BA FA 00                              		LEA DX,MSG4	
+[ 121]    0356: B4 09                                 		MOV AH,9
+[ 122]    0358: CD 21                                 		INT 21H
+[ 123]    035A: E8 70 01                              		CALL new_line	
+[ 124]        :                                       		
+[ 125]    035D: 59                                    		POP CX
+[ 126]    035E: 51                                    		PUSH CX ;
+[ 127]    035F: 33 F6                                 		XOR SI,SI
+[ 128]        :                                       
+[ 129]        :                                       ;Affichage de la liste initiale
+[ 130]    0361:                                       showArray:
+[ 131]    0361: 32 FF                                 		XOR BH,BH
+[ 132]    0363: 8A 1C                                 		MOV BL, dizi[SI]
+[ 133]    0365: E8 76 01                              		CALL print	
+[ 134]        :                                       		
+[ 135]    0368: BA 3F 02                              		LEA DX,MSG_voi	
+[ 136]    036B: B4 09                                 		MOV AH,9
+[ 137]    036D: CD 21                                 		INT 21H
+[ 138]        :                                       		
+[ 139]    036F: 46                                    		INC SI
+[ 140]    0370: E2 EF                                 		LOOP showArray
+[ 141]        :                                       		
+[ 142]    0372: E8 58 01                              		CALL new_line
+[ 143]    0375: E8 55 01                              		CALL new_line
+[ 144]    0378: BA 11 01                              		LEA DX,MSG5	;
+[ 145]    037B: B4 09                                 		MOV AH,9
+[ 146]    037D: CD 21                                 		INT 21H
+[ 147]        :                                       		
+[ 148]        :                                       		
+[ 149]        :                                       
+[ 150]    037F: 33 C0                                 		XOR AX,AX ; left = 0
+[ 151]    0381: 5B                                    		POP BX ; right = BX = n
+[ 152]    0382: 53                                    		PUSH BX
+[ 153]    0383: 4B                                    		DEC BX ; right = n-1
+[ 154]    0384: E8 E7 00                              		CALL  quicksort
+[ 155]        :                                       		
+[ 156]    0387: E8 43 01                              		CALL new_line
+[ 157]        :                                       		
+[ 158]        :                                       		
+[ 159]    038A: 59                                    		POP CX  ; cx = n
+[ 160]    038B: 89 0E 5E 02                           MOV size,cx
+[ 161]    038F: 33 F6                                 		XOR SI, SI
+[ 162]        :                                       
+[ 163]        :                                       ;Affichage des Nombres pairs
+[ 164]    0391:                                       showArray2:
+[ 165]    0391: 32 FF                                 		XOR BH,BH
+[ 166]    0393: 8A 1C                                 		MOV BL, dizi[SI]
+[ 167]    0395: E8 46 01                              		CALL print	
+[ 168]        :                                       		
+[ 169]    0398: BA 3F 02                              		LEA DX,MSG_voi	
+[ 170]    039B: B4 09                                 		MOV AH,9
+[ 171]    039D: CD 21                                 		INT 21H
+[ 172]        :                                       		
+[ 173]    039F: 46                                    		INC SI
+[ 174]    03A0: E2 EF                                 		LOOP showArray2
+[ 175]        :                                       		
+[ 176]        :                                       
+[ 177]    03A2: E8 28 01                              CALL new_line
+[ 178]    03A5: E8 25 01                              CALL new_line
+[ 179]    03A8: BA 23 01                              		LEA DX,MSG6	
+[ 180]    03AB: B4 09                                 		MOV AH,9
+[ 181]        :                                       		
+[ 182]    03AD: CD 21                                 		INT 21H
+[ 183]    03AF: E8 1B 01                              CALL new_line
+[ 184]    03B2: 8B 0E 5E 02                           mov cx,size
+[ 185]    03B6: 33 F6                                 XOR SI,SI
+[ 186]    03B8:                                       showArray3:
+[ 187]    03B8: 32 FF                                 		XOR BH,BH
+[ 188]    03BA: 32 E4                                 XOR AH,AH
+[ 189]        :                                       		
+[ 190]    03BC: 8A 04                                 MOV AL,dizi[SI]
+[ 191]    03BE: B4 00                                 MOV AH,0
+[ 192]    03C0: B2 02                                 MOV DL,2
+[ 193]    03C2: F6 F2                                 DIV DL
+[ 194]    03C4: 80 FC 00                              CMP AH,0
+[ 195]    03C7: 75 0C                                 JNE DONE
+[ 196]    03C9:                                       EVEN:
+[ 197]    03C9: 8A 1C                                 MOV BL, dizi[SI]
+[ 198]    03CB: E8 10 01                              		CALL print			
+[ 199]    03CE: BA 3F 02                              		LEA DX,MSG_voi	
+[ 200]    03D1: B4 09                                 		MOV AH,9
+[ 201]    03D3: CD 21                                 		INT 21H
+[ 202]    03D5:                                       		DONE:
+[ 203]    03D5: 46                                    		INC SI
+[ 204]    03D6: E2 E0                                 		LOOP showArray3
+[ 205]        :                                       
+[ 206]        :                                       
+[ 207]    03D8: E8 F2 00                              CALL new_line
+[ 208]    03DB: E8 EF 00                              CALL new_line
+[ 209]    03DE: BA 50 01                              		LEA DX,MSG7	; list odd numbers.
+[ 210]    03E1: B4 09                                 		MOV AH,9
+[ 211]        :                                       		
+[ 212]    03E3: CD 21                                 		INT 21H
+[ 213]    03E5: E8 E5 00                              CALL new_line
+[ 214]    03E8: 8B 0E 5E 02                           mov cx,size
+[ 215]    03EC: 33 F6                                 XOR SI,SI
+[ 216]    03EE: 03 36 5E 02                           add SI,size
+[ 217]    03F2: 4E                                    dec SI
+[ 218]        :                                       
+[ 219]        :                                       ;Affichage des nombres impairs et %3
+[ 220]    03F3:                                       showArray4:
+[ 221]    03F3: 32 FF                                 		XOR BH,BH
+[ 222]    03F5: 32 E4                                 XOR AH,AH
+[ 223]        :                                       		
+[ 224]        :                                       ;check si impair et divisible par 3
+[ 225]    03F7: 8A 04                                 MOV AL,dizi[SI]
+[ 226]    03F9: B4 00                                 MOV AH,0
+[ 227]    03FB: B2 03                                 MOV DL,3
+[ 228]    03FD: F6 F2                                 DIV DL
+[ 229]    03FF: 80 FC 00                              CMP AH,0
+[ 230]    0402: 75 19                                 JNE de
+[ 231]        :                                       
+[ 232]    0404:                                       dex:
+[ 233]    0404: 8A 04                                 MOV AL,dizi[SI]
+[ 234]    0406: B4 00                                 MOV AH,0
+[ 235]    0408: B2 02                                 MOV DL,2
+[ 236]    040A: F6 F2                                 DIV DL
+[ 237]    040C: 80 FC 00                              CMP AH,0
+[ 238]    040F: 74 0C                                 JE de
+[ 239]        :                                       
+[ 240]    0411: 8A 1C                                 MOV BL, dizi[SI]
+[ 241]    0413: E8 C8 00                              		CALL print			
+[ 242]    0416: BA 3F 02                              		LEA DX,MSG_voi	
+[ 243]    0419: B4 09                                 		MOV AH,9
+[ 244]    041B: CD 21                                 		INT 21H
+[ 245]    041D:                                       de:
+[ 246]    041D: 4E                                    dec SI
+[ 247]    041E: E2 D3                                 loop showArray4
+[ 248]        :                                       
+[ 249]        :                                       ;list of others
+[ 250]    0420: E8 AA 00                              CALL new_line
+[ 251]    0423: E8 A7 00                              CALL new_line
+[ 252]    0426: BA 90 01                              		LEA DX,MSG8	
+[ 253]    0429: B4 09                                 		MOV AH,9
+[ 254]        :                                       		
+[ 255]    042B: CD 21                                 		INT 21H
+[ 256]    042D: E8 9D 00                              CALL new_line
+[ 257]    0430: 8B 0E 5E 02                           mov cx,size
+[ 258]    0434: 33 F6                                 XOR SI,SI
+[ 259]        :                                       ;Affichage des autres nombres
+[ 260]    0436:                                       showArray5:
+[ 261]    0436: 32 FF                                 		XOR BH,BH
+[ 262]    0438: 32 E4                                 XOR AH,AH
+[ 263]        :                                       		
+[ 264]        :                                       
+[ 265]        :                                       
+[ 266]        :                                       ;check si impair et non divisible par 3
+[ 267]    043A: 8A 04                                 MOV AL,dizi[SI]
+[ 268]    043C: B4 00                                 MOV AH,0
+[ 269]    043E: B2 03                                 MOV DL,3
+[ 270]    0440: F6 F2                                 DIV DL
+[ 271]    0442: 80 FC 00                              CMP AH,0
+[ 272]    0445: 74 19                                 JE deR
+[ 273]        :                                       
+[ 274]    0447: 8A 04                                 MOV AL,dizi[SI]
+[ 275]    0449: B4 00                                 MOV AH,0
+[ 276]    044B: B2 02                                 MOV DL,2
+[ 277]    044D: F6 F2                                 DIV DL
+[ 278]    044F: 80 FC 00                              CMP AH,0
+[ 279]    0452: 74 0C                                 JE deR
+[ 280]        :                                       
+[ 281]    0454: 8A 1C                                 MOV BL, dizi[SI]
+[ 282]    0456: E8 85 00                              		CALL print			
+[ 283]    0459: BA 3F 02                              		LEA DX,MSG_voi	
+[ 284]    045C: B4 09                                 		MOV AH,9
+[ 285]    045E: CD 21                                 		INT 21H
+[ 286]    0460:                                       deR:
+[ 287]    0460: 46                                    inc SI
+[ 288]    0461: E2 D3                                 loop showArray5
+[ 289]        :                                       
+[ 290]    0463: E8 67 00                              CALL new_line
+[ 291]    0466: BA 06 02                              LEA DX,MSG10
+[ 292]    0469: B4 09                                 		MOV AH,9
+[ 293]    046B: CD 21                                 		INT 21H
+[ 294]        :                                       
+[ 295]        :                                       
+[ 296]    046D: F4                                    HLT
+[ 297]        :                                       
+[ 298]        :                                       BASLA   ENDP
+[ 299]        :                                       
+[ 300]        :                                       ;Procedure de QuickSort
+[ 301]    046E:                                       quicksort	PROC
+[ 302]        :                                       
+[ 303]        :                                       	; LEFT:AX, RIGHT:BX
+[ 304]    046E: 53                                    PUSH BX
+[ 305]    046F: 50                                    PUSH AX
+[ 306]    0470: 3B C3                                 	CMP AX,BX
+[ 307]    0472: 7D 13                                 	JGE bitti
+[ 308]    0474: E8 13 00                              	CALL arrange_pivot
+[ 309]        :                                       	
+[ 310]    0477: 58                                    POP AX
+[ 311]    0478: 8B DA                                 	MOV BX,DX
+[ 312]    047A: 4B                                    	DEC BX ; right = pivot - 1
+[ 313]    047B: E8 F0 FF                              	CALL quicksort ; (left:left, right:pivot-1)
+[ 314]    047E: 5B                                    POP BX
+[ 315]    047F: 8B C2                                 	MOV AX,DX
+[ 316]    0481: 40                                    	INC AX ; left = pivot + 1
+[ 317]    0482: E8 E9 FF                              	CALL quicksort ; (left:pivot+1, right:right)
+[ 318]    0485: EB 02                                 	JMP devamEdiyor
+[ 319]    0487:                                       	bitti:
+[ 320]    0487: 58                                    	POP AX
+[ 321]    0488: 5B                                    	POP BX
+[ 322]    0489:                                       	devamEdiyor:
+[ 323]    0489: C3                                    	RET
+[ 324]        :                                       quicksort	ENDP
+[ 325]        :                                       
+[ 326]    048A:                                       arrange_pivot PROC
+[ 327]    048A: 32 F6                                 	XOR DH,DH
+[ 328]        :                                       	; DX: pivot, AX: left, BX: right
+[ 329]    048C: 8A 17                                 	MOV DL, dizi[BX] ; DX = dizi[right]
+[ 330]    048E: 8B F0                                 	MOV SI,AX
+[ 331]    0490: 4E                                    	DEC SI ; ind = SI = left - 1
+[ 332]        :                                       	
+[ 333]    0491: 8B CB                                 	MOV CX,BX
+[ 334]    0493: 2B C8                                 	SUB CX,AX ;  right-left
+[ 335]        :                                       	
+[ 336]    0495: 8B F8                                 	MOV DI,AX ; j = left
+[ 337]    0497:                                       dongu1:
+[ 338]    0497: 53                                    	PUSH BX
+[ 339]    0498: 32 FF                                 	XOR BH,BH
+[ 340]    049A: 8A 1D                                 	MOV BL, dizi[DI]
+[ 341]    049C: 3A DA                                 	CMP BL,DL
+[ 342]    049E: 7F 0B                                 	JG devam2
+[ 343]    04A0: 46                                    	INC SI
+[ 344]        :                                       	
+[ 345]        :                                       	
+[ 346]    04A1: 52                                    	PUSH DX
+[ 347]    04A2: 32 F6                                 	XOR DH,DH
+[ 348]    04A4: 8A 14                                 	MOV DL,dizi[SI]
+[ 349]    04A6: 86 15                                 	XCHG DL,dizi[DI]
+[ 350]    04A8: 88 14                                 	MOV dizi[SI],DL
+[ 351]    04AA: 5A                                    	POP DX
+[ 352]        :                                       	
+[ 353]    04AB:                                       	devam2:
+[ 354]    04AB: 5B                                    	POP BX
+[ 355]    04AC: 47                                    	INC DI
+[ 356]    04AD: E2 E8                                 	LOOP dongu1
+[ 357]        :                                       
+[ 358]        :                                       	
+[ 359]    04AF: 52                                    	PUSH DX
+[ 360]    04B0: 32 F6                                 	XOR DH,DH
+[ 361]    04B2: 46                                    	INC SI ; SI+1
+[ 362]    04B3: 8A 14                                 	MOV DL,dizi[SI]
+[ 363]    04B5: 86 17                                 	XCHG DL,dizi[BX]
+[ 364]    04B7: 88 14                                 	MOV dizi[SI],DL
+[ 365]    04B9: 5A                                    	POP DX
+[ 366]        :                                       	
+[ 367]    04BA: 8B D6                                 	MOV DX,SI ;; DX = SI+1
+[ 368]        :                                       
+[ 369]    04BC: C3                                    	RET
+[ 370]        :                                       arrange_pivot ENDP
+[ 371]        :                                       
+[ 372]        :                                       ;Procedure pour recevoir les entrees de l'uitilisateur
+[ 373]    04BD:                                       read_number	PROC
+[ 374]    04BD: 56                                    PUSH SI
+[ 375]        :                                       	
+[ 376]    04BE: B4 0A                                 	MOV AH, 0ah
+[ 377]    04C0: BA 42 02                              	mov dx,offset the_string
+[ 378]    04C3: CD 21                                 	INT 21H
+[ 379]        :                                       	
+[ 380]    04C5: BE 42 02                              	MOV SI, offset the_string
+[ 381]    04C8: E8 4A 00                              	CALL string2num	
+[ 382]    04CB: 5E                                    POP SI
+[ 383]    04CC: C3                                    	RET
+[ 384]        :                                       read_number ENDP
+[ 385]        :                                       
+[ 386]        :                                       ;Procedure pour faire un saut de ligne
+[ 387]    04CD:                                       new_line	PROC
+[ 388]    04CD: 52                                    		PUSH DX
+[ 389]    04CE: 50                                    		PUSH AX
+[ 390]        :                                       		
+[ 391]    04CF: B2 0A                                 		MOV dl, 10	;  \n
+[ 392]    04D1: B4 02                                 		MOV ah, 02h
+[ 393]    04D3: CD 21                                 		INT 21h
+[ 394]    04D5: B2 0D                                 		MOV dl, 13
+[ 395]    04D7: B4 02                                 		MOV ah, 02h
+[ 396]    04D9: CD 21                                 		INT 21h
+[ 397]        :                                       		
+[ 398]    04DB: 58                                    		POP AX
+[ 399]    04DC: 5A                                    		POP DX
+[ 400]    04DD: C3                                    		RET
+[ 401]        :                                       new_line ENDP
+[ 402]        :                                       ;Procedure d'affichage
+[ 403]    04DE:                                       print		PROC
+[ 404]    04DE: 50                                    push ax
+[ 405]    04DF: 52                                    push dx
+[ 406]    04E0: 51                                    push cx
+[ 407]    04E1: 53                                    push bx
+[ 408]    04E2: 8B C3                                 	mov  ax, bx
+[ 409]    04E4: 80 FB 00                              	CMP bl,0
+[ 410]    04E7: 7D 0B                                 	JGE devam ;
+[ 411]    04E9: BA 87 00                              		LEA DX,MSG_neg ;
+[ 412]    04EC: B4 09                                 		MOV AH,9
+[ 413]    04EE: CD 21                                 		INT 21H
+[ 414]    04F0: 8B C3                                 		MOV AX,BX
+[ 415]    04F2: F6 D8                                 		NEG Al
+[ 416]    04F4:                                       	devam:
+[ 417]        :                                       	
+[ 418]    04F4: BB 0A 00                              MOV BX, 10
+[ 419]    04F7: 33 D2                                 XOR DX,DX
+[ 420]    04F9: 33 C9                                 XOR CX,CX
+[ 421]        :                                       
+[ 422]        :                                       
+[ 423]    04FB:                                       bol1:
+[ 424]    04FB: 33 D2                                 	XOR DX,DX
+[ 425]    04FD: F7 F3                                 DIV BX      ;AX/BX
+[ 426]    04FF: 52                                    PUSH DX
+[ 427]    0500: 41                                    INC CX
+[ 428]    0501: 3D 00 00                              CMP AX, 0
+[ 429]    0504: 75 F5                                 JNE bol1
+[ 430]        :                                       
+[ 431]    0506: 5A                                    bol2:  POP DX
+[ 432]    0507: 83 C2 30                              ADD DX, 30H
+[ 433]    050A: B4 02                                 MOV AH, 02H
+[ 434]    050C: CD 21                                 INT 21H
+[ 435]    050E: E2 F6                                 LOOP bol2
+[ 436]        :                                       
+[ 437]    0510: 5B                                    pop bx
+[ 438]    0511: 59                                    pop cx
+[ 439]    0512: 5A                                    pop dx
+[ 440]    0513: 58                                    pop ax
+[ 441]    0514: C3                                    RET
+[ 442]        :                                       print ENDP
+[ 443]        :                                       
+[ 444]    0515:                                       string2num	PROC
+[ 445]    0515: 51                                    push cx
+[ 446]    0516: 56                                    push si
+[ 447]        :                                       
+[ 448]    0517: 46                                    inc  si
+[ 449]    0518: 8A 0C                                 mov  cl, [ si ]
+[ 450]    051A: 32 ED                                 xor ch,ch
+[ 451]    051C: 03 F1                                 add  si, cx
+[ 452]        :                                       
+[ 453]    051E: 33 DB                                 xor bx,bx
+[ 454]    0520: BD 01 00                              mov  bp, 1 ;MULTIPLE OF 10 TO MULTIPLY EVERY DIGIT.
+[ 455]        :                                       
+[ 456]    0523: 33 C0                                 xor ax,ax
+[ 457]    0525:                                       repeat:
+[ 458]        :                                       
+[ 459]    0525: 8A 04                                 mov  al, [ si ]
+[ 460]    0527: 3C 2D                                 CMP AL,'-'
+[ 461]    0529: 75 04                                 JNE positive
+[ 462]        :                                       		
+[ 463]    052B: F7 DB                                 		NEG BX
+[ 464]    052D: EB 14                                 		JMP negative
+[ 465]    052F:                                       positive:
+[ 466]    052F: 2C 30                                 sub  al, 48
+[ 467]        :                                       
+[ 468]    0531: 32 E4                                 xor ah,ah
+[ 469]    0533: F7 E5                                 mul  bp ;AX*BP = DX:AX
+[ 470]    0535: 03 D8                                 add  bx,ax
+[ 471]        :                                       
+[ 472]    0537: 8B C5                                 mov  ax, bp
+[ 473]    0539: BD 0A 00                              mov  bp, 10
+[ 474]    053C: F7 E5                                 mul  bp
+[ 475]    053E: 8B E8                                 mov  bp, ax
+[ 476]        :                                       
+[ 477]    0540: 4E                                    dec  si
+[ 478]    0541: E2 E2                                 loop repeat
+[ 479]    0543:                                       negative:
+[ 480]        :                                       
+[ 481]    0543: 5E                                    pop si
+[ 482]    0544: 59                                    pop cx
+[ 483]    0545: C3                                    RET
+[ 484]        :                                       string2num ENDP
+[ 485]        :                                       
+[ 486]        :                                       CODESG  ENDS
+[ 487]        :                                       END BASLA
+[ 488]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 46      -   bytes on last page (l.byte)
+0003: 01      -   bytes on last page (h.byte)
+0004: 04      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 00      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 80      -   SP - stack pointer (l.byte)
+0011: 00      -   SP - stack pointer (h.byte)
+0012: 85      -   check sum (l.byte)
+0013: AA      -   check sum (h.byte)
+0014: 00      -   IP - instruction pointer (l.byte)
+0015: 00      -   IP - instruction pointer (h.byte)
+0016: 2E      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 05      -   relocation table - offset inside segment (l.byte)
+001F: 00      -   relocation table - offset inside segment (h.byte)
+0020: 2E      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================

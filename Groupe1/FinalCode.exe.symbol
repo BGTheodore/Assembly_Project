@@ -1,0 +1,62 @@
+< THE SYMBOL TABLE >  FinalCode.exe  --  emu8086 assembler version: 4.08 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+STACKSG                  	00000     	-5        	SEGMENT   	(ITSELF)  
+DATASG                   	00008     	-5        	SEGMENT   	(ITSELF)  
+DIZI                     	00000     	1         	VAR       	DATASG    
+ELEMAN                   	00064     	1         	VAR       	DATASG    
+MSG2                     	00065     	1         	VAR       	DATASG    
+MSG_NEG                  	00087     	1         	VAR       	DATASG    
+MSG_VAL                  	00089     	1         	VAR       	DATASG    
+MSG_ERR                  	00095     	1         	VAR       	DATASG    
+MSG_ERR1                 	000C8     	1         	VAR       	DATASG    
+MSG4                     	000FA     	1         	VAR       	DATASG    
+MSG5                     	00111     	1         	VAR       	DATASG    
+MSG6                     	00123     	1         	VAR       	DATASG    
+MSG7                     	00150     	1         	VAR       	DATASG    
+MSG8                     	00190     	1         	VAR       	DATASG    
+MSG9                     	001CA     	1         	VAR       	DATASG    
+MSG10                    	00206     	1         	VAR       	DATASG    
+MSG_VOI                  	0023F     	1         	VAR       	DATASG    
+THE_STRING               	00242     	1         	VAR       	DATASG    
+SIZE                     	0025E     	2         	VAR       	DATASG    
+CODESG                   	0002E     	-5        	SEGMENT   	(ITSELF)  
+BASLA                    	00000     	-1        	FAR       	CODESG    
+ASK_AGAIN                	00013     	-1        	LABEL     	CODESG    
+HATA0                    	00029     	-1        	LABEL     	CODESG    
+OK                       	00035     	-1        	LABEL     	CODESG    
+GETELEMENT               	0003F     	-1        	LABEL     	CODESG    
+HATA1                    	0005D     	-1        	LABEL     	CODESG    
+HATAYOK                  	00068     	-1        	LABEL     	CODESG    
+HATADEVAM                	0006A     	-1        	LABEL     	CODESG    
+SHOWARRAY                	00081     	-1        	LABEL     	CODESG    
+SHOWARRAY2               	000B1     	-1        	LABEL     	CODESG    
+SHOWARRAY3               	000D8     	-1        	LABEL     	CODESG    
+EVEN                     	000E9     	-1        	LABEL     	CODESG    
+DONE                     	000F5     	-1        	LABEL     	CODESG    
+SHOWARRAY4               	00113     	-1        	LABEL     	CODESG    
+DEX                      	00124     	-1        	LABEL     	CODESG    
+DE                       	0013D     	-1        	LABEL     	CODESG    
+SHOWARRAY5               	00156     	-1        	LABEL     	CODESG    
+DER                      	00180     	-1        	LABEL     	CODESG    
+QUICKSORT                	0018E     	-1        	NEAR      	CODESG    
+BITTI                    	001A7     	-1        	LABEL     	CODESG    
+DEVAMEDIYOR              	001A9     	-1        	LABEL     	CODESG    
+ARRANGE_PIVOT            	001AA     	-1        	NEAR      	CODESG    
+DONGU1                   	001B7     	-1        	LABEL     	CODESG    
+DEVAM2                   	001CB     	-1        	LABEL     	CODESG    
+READ_NUMBER              	001DD     	-1        	NEAR      	CODESG    
+NEW_LINE                 	001ED     	-1        	NEAR      	CODESG    
+PRINT                    	001FE     	-1        	NEAR      	CODESG    
+DEVAM                    	00214     	-1        	LABEL     	CODESG    
+BOL1                     	0021B     	-1        	LABEL     	CODESG    
+BOL2                     	00226     	-1        	LABEL     	CODESG    
+STRING2NUM               	00235     	-1        	NEAR      	CODESG    
+REPEAT                   	00245     	-1        	LABEL     	CODESG    
+POSITIVE                 	0024F     	-1        	LABEL     	CODESG    
+NEGATIVE                 	00263     	-1        	LABEL     	CODESG    
+===================================================================================================
+[ 10/24/2020  --  6:17:21 PM ] 
+< END >
+ 
